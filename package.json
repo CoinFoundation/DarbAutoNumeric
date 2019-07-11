@@ -1,5 +1,5 @@
 {
-  "name": "autonumeric",
+  "name": "darb-autonumeric",
   "version": "4.2.0",
   "description": "autoNumeric is a standalone Javascript library that provides live *as-you-type* formatting for international numbers and currencies. It supports most international numeric formats and currencies including those used in Europe, Asia, and North and South America.",
   "main": "dist/autoNumeric.js",
@@ -70,7 +70,7 @@
       "name": "Cory Foy"
     }
   ],
-  "homepage": "https://github.com/autoNumeric/autoNumeric/",
+  "homepage": "https://github.com/CoinFoundation/DarbAutoNumeric",
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -141,24 +141,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/autoNumeric/autoNumeric.git"
-  },
-  "bugs": {
-    "url": "https://github.com/autoNumeric/autoNumeric/issues"
-  },
-  "autoupdate": {
-    "source": "git",
-    "target": "git://github.com/autoNumeric/autoNumeric.git",
-    "basePath": "",
-    "files": [
-      "src/AutoNumeric.js",
-      "src/AutoNumericDefaultSettings.js",
-      "src/AutoNumericEnum.js",
-      "src/AutoNumericEvents.js",
-      "src/AutoNumericHelper.js",
-      "src/AutoNumericOptions.js",
-      "src/AutoNumericPredefinedOptions.js",
-      "src/main.js"
-    ]
+    "url": "git+https://git@github.com/CoinFoundation/DarbAutoNumeric.git"
   }
 }
