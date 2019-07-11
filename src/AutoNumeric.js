@@ -6185,15 +6185,15 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
         if (this.eventKey === AutoNumericEnum.keyName.Enter && this.valueOnFocus !== targetValue) {
             /* eslint no-console: 0 */
             console.log('DarbAutonumeric AutoNumericEnum.keyName.Enter', e);
-            e.preventDefault();
+            // e.preventDefault();
 
-            // this._triggerEvent(AutoNumeric.events.native.change, e.target);
-            // this.valueOnFocus = targetValue;
+            this._triggerEvent(AutoNumeric.events.native.change, e.target);
+            this.valueOnFocus = targetValue;
 
-            // if (this.settings.isCancellable) {
-            //     // If the user activated the 'cancellable' feature, we save the validated value when 'Enter' is hit
-            //     this._saveCancellableValue();
-            // }
+            if (this.settings.isCancellable) {
+                // If the user activated the 'cancellable' feature, we save the validated value when 'Enter' is hit
+                this._saveCancellableValue();
+            }
         }
 
         this._updateInternalProperties(e);
