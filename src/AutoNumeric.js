@@ -160,7 +160,7 @@ export default class AutoNumeric {
 
         // Save the initial values (html attribute + element.value) for the pristine test
         this._saveInitialValues(initialValue);
-        
+
         // Setup the data for the persistent storage solution (ie. sessionStorage or cookies)
         this.sessionStorageAvailable = this.constructor._storageTest();
         this.storageNamePrefix = 'AUTO_'; // The prefix for the raw value storage name variable can be modified here
@@ -1960,7 +1960,7 @@ export default class AutoNumeric {
 
             return this;
         }
-        
+
         if (value === '' && this.settings.emptyInputBehavior === AutoNumeric.options.emptyInputBehavior.zero) {
             // Keep the value zero inside the element
             value = 0;
@@ -6183,13 +6183,16 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
         // The "enter" key throws a `change` event if the value has changed since the `focus` event
         let targetValue = AutoNumericHelper.getElementValue(e.target);
         if (this.eventKey === AutoNumericEnum.keyName.Enter && this.valueOnFocus !== targetValue) {
-            this._triggerEvent(AutoNumeric.events.native.change, e.target);
-            this.valueOnFocus = targetValue;
+            console.log('DarbAutonumeric AutoNumericEnum.keyName.Enter', e);
+            e.preventDefault();
 
-            if (this.settings.isCancellable) {
-                // If the user activated the 'cancellable' feature, we save the validated value when 'Enter' is hit
-                this._saveCancellableValue();
-            }
+            // this._triggerEvent(AutoNumeric.events.native.change, e.target);
+            // this.valueOnFocus = targetValue;
+
+            // if (this.settings.isCancellable) {
+            //     // If the user activated the 'cancellable' feature, we save the validated value when 'Enter' is hit
+            //     this._saveCancellableValue();
+            // }
         }
 
         this._updateInternalProperties(e);
