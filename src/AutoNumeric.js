@@ -6183,6 +6183,7 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
         // The "enter" key throws a `change` event if the value has changed since the `focus` event
         let targetValue = AutoNumericHelper.getElementValue(e.target);
         if (this.eventKey === AutoNumericEnum.keyName.Enter && this.valueOnFocus !== targetValue) {
+            /* eslint no-console: 0 */
             console.log('DarbAutonumeric AutoNumericEnum.keyName.Enter', e);
             e.preventDefault();
 
