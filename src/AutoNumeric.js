@@ -6185,6 +6185,7 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
         if (this.eventKey === AutoNumericEnum.keyName.Enter && this.valueOnFocus !== targetValue) {
             if (this.domElement.tagName.toLowerCase() === 'div') {
                 e.preventDefault();
+                // XXX - mimic input's normal behavior
                 this.domElement.blur();
                 /* eslint no-console: 0 */
                 console.log('DarbAutonumeric AutoNumericEnum.keyName.Enter', e, this);
@@ -6576,7 +6577,7 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
             //TODO Refactor this with the tests below
             // Since the whole element content will be replaced, no need to complicate things and directly test for the validity of the pasted content, then set the `rawValue` and caret position (fix issue #482)
             // 1. Strip all thousand separators, brackets and currency sign, and convert the decimal character to a dot
-            const untranslatedPastedText = this._preparePastedText(rawPastedText);
+            const untranslatedPastedText = this._parseLocalistedNumberStringToNumber(rawPastedText);
             const pastedRawValue = AutoNumericHelper.arabicToLatinNumbers(untranslatedPastedText, false, false, false); // Allow pasting arabic numbers
 
             // 2. Check that the paste is a valid number once it has been normalized to a raw value
@@ -6606,7 +6607,7 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
         }
 
         // 2. Strip all thousand separators, brackets and currency sign, and convert the decimal character to a dot
-        const untranslatedPastedText = this._preparePastedText(rawPastedText);
+        const untranslatedPastedText = this._parseLocalistedNumberStringToNumber(rawPastedText);
 
         let pastedText;
         if (untranslatedPastedText === '.') {
@@ -7899,6 +7900,92 @@ To solve that, you'd need to either set \`decimalPlacesRawValue\` to \`null\`, o
      */
     _preparePastedText(text) {
         return this.constructor._stripAllNonNumberCharacters(text, this.settings, true, this.isFocused);
+    }
+
+    /**
+     * Return the pasted text as number
+     * !! converts arabic  numbers to latin numbers (normal)
+     * !! removes thousand separators
+     * !! replaces various decimal separators with dot
+     *
+     * @param {string} text
+     * @returns {number}
+     */
+
+    _parseLocalistedNumberStringToNumber(text) {
+        const decimalSeparator = {
+            comma: ',',
+            dot: '.',
+            middleDot: '·',
+            arabicDecimalSeparator: '٫',
+            decimalSeparatorKeySymbol: '⎖',
+        };
+
+        const thousandSeparator = {
+            normalSpace: ' ',
+            thinSpace: '\u2009',
+            narrowNoBreakSpace: '\u202f',
+            noBreakSpace: '\u00a0',
+            arabicThousandsSeparator: '٬',
+        };
+
+        // XXX arabicToLatinNumbers
+        function convertNumbers2English(string) {
+            const tmp = string.replace(/[\u0660-\u0669]/g, c => c.charCodeAt(0) - 0x0660).replace(/[\u06f0-\u06f9]/g, c => c.charCodeAt(0) - 0x06f0);
+            return tmp;
+        }
+
+        const zeeInput = convertNumbers2English(text.trim());
+        const arrayFormInputString = Array.from(zeeInput);
+        const specialChars = [];
+        let result;
+
+        // XXX iterate over string and check each char
+        arrayFormInputString.forEach(char => {
+            if (isNaN(parseInt(char, 10))) {
+                specialChars.push(char);
+            }
+        });
+
+        if (specialChars.length === 0) {
+            // just a regular number
+            result = parseFloat(zeeInput);
+        } else if (specialChars.length === 1) {
+            // XXX - this part could be improved, ATM '1.000' and "1,000" are parsed to "1"
+            if (Object.values(thousandSeparator).includes(specialChars[0])) {
+                // it seems there is only thousand grouping separator character
+                const tmp = zeeInput.replace(specialChars[0], '');
+                result = parseFloat(tmp);
+            } else if (Object.values(decimalSeparator).includes(specialChars[0])) {
+                // it seems there is only decimal separator character
+                const tmp = zeeInput.replace(specialChars[0], '.');
+                result = parseFloat(tmp);
+            }
+        } else {
+            // multiple special chars
+            const uniqueSpecialChars = [...new Set(specialChars)];
+            if (uniqueSpecialChars.length === 2) {
+                let pattern = uniqueSpecialChars[0];
+                if (uniqueSpecialChars[0] === '.') {
+                    // XXX dot case, needs to be escaped
+                    pattern = '\\' + pattern;
+                }
+
+                const regExp = new RegExp(pattern, 'g');
+                // both thousand and decimal separator are present
+                let tmp = zeeInput.replace(regExp, '');
+                tmp = tmp.replace(uniqueSpecialChars[1], '.');
+                result = parseFloat(tmp);
+            } else {
+                const regExp = new RegExp(uniqueSpecialChars[0], 'g');
+                // multiple thousand grouping separator
+                const tmp = zeeInput.replace(regExp, '');
+                result = parseFloat(tmp);
+            }
+        }
+        /* eslint no-console: 0 */
+        console.log('DarbAutonumeric _parseLocalistedNumberStringToNumber input:', text, 'output:', result);
+        return result;
     }
 
     /**
