@@ -6577,7 +6577,7 @@ var AutoNumeric = function () {
                 }
             }
             /* eslint no-console: 0 */
-            console.log('DarbAutonumeric _parseLocalistedNumberStringToNumber input:', text, 'output:', result);
+            // console.log('DarbAutonumeric _parseLocalistedNumberStringToNumber input:', text, 'output:', result);
             return result;
         }
 
