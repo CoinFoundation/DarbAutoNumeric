@@ -87,6 +87,7 @@ const selectors = {
     issue393inputLimitOneSideDown     : '#issue_393_limitOneSideDown',
     contentEditable1                  : '#contentEditable1',
     contentEditable2                  : '#contentEditable2',
+    contentEditableNotActivatedYet    : '#contentEditableNotActivatedYet',
     contentEditableNotActivated       : '#contentEditableNotActivated',
     issue403a                         : '#issue_403a',
     issue403b                         : '#issue_403b',
@@ -205,6 +206,27 @@ const selectors = {
     issue432dot                       : '#issue_432_dot',
     issue432none                      : '#issue_432_none',
     issue535                          : '#issue_535',
+    issue550                          : '#issue_550',
+    issue550Blur                      : '#issue_550_blur',
+    issue550ChangeDetector            : '#issue_550_change_detector',
+    issue550Button                    : '#issue_550_button',
+    issue521                          : '#issue_521',
+    issue521Set                       : '#issue_521_set',
+    issue521InputDetector             : '#issue_521_input_detector',
+    issue521Button                    : '#issue_521_button',
+    issue574                          : '#issue_574',
+    issue559                          : '#issue_559',
+    issue559Default                   : '#issue_559_2',
+    issue593                          : '#issue_593',
+    issue593Paste                     : '#issue_593_paste',
+    issue593Truncate                  : '#issue_593_truncate',
+    issue594Left                      : '#issue_594_left',
+    issue594Right                     : '#issue_594_right',
+    issue542On                        : '#issue_542_on',
+    issue542Off                       : '#issue_542_off',
+    issue611HtmlReadOnly              : '#issue_611_html_readonly',
+    issue611OptionReadOnly            : '#issue_611_option_readonly',
+    issue611HtmlAndOptionReadOnly     : '#issue_611_html_and_option_readonly',
 };
 
 //-----------------------------------------------------------------------------
@@ -1201,16 +1223,36 @@ describe('Elements with the `contenteditable` attribute set to `true`', () => {
         expect(browser.getText(selectors.contentEditable2)).toEqual('$226,778.90');
     });
 
-    it('should not change the element value since `contenteditable` is set to `false`', () => {
+    it('should be able change the element value since `contenteditable` is initially set to `false`, but an option update sets the `readOnly` option to `false`', () => {
         const contentEditableNotActivated = $(selectors.contentEditableNotActivated);
 
         // Focus in the input
         contentEditableNotActivated.click();
 
+        // Test the `contenteditable` attribute
+        expect(browser.getAttribute(selectors.contentEditableNotActivated, 'contenteditable')).toEqual('true');
+
         // Test the values
         expect(browser.getText(selectors.contentEditableNotActivated)).toEqual('69.02 CHF');
+        browser.keys(['Home']);
+        browser.keys(['ArrowLeft']); //FIXME This is a hack to circumvent a geckodriver bug where `Home` is not taken into account on the preceding line
+        browser.keys(['1234']);
+        expect(browser.getText(selectors.contentEditableNotActivated)).toEqual("123'469.02 CHF");
+    });
+
+    it('should not change the element value since `contenteditable` is set to `false`', () => {
+        const contentEditableNotActivatedYet = $(selectors.contentEditableNotActivatedYet);
+
+        // Focus in the input
+        contentEditableNotActivatedYet.click();
+
+        // Test the `contenteditable` attribute
+        expect(browser.getAttribute(selectors.contentEditableNotActivatedYet, 'contenteditable')).toEqual('false');
+
+        // Test the values
+        expect(browser.getText(selectors.contentEditableNotActivatedYet)).toEqual('©123,456.79');
         browser.keys(['Home', '1234']);
-        expect(browser.getText(selectors.contentEditableNotActivated)).toEqual('69.02 CHF');
+        expect(browser.getText(selectors.contentEditableNotActivatedYet)).toEqual('©123,456.79');
     });
 
     //FIXME Add the paste tests (and check the resulting caret position)
@@ -1537,7 +1579,7 @@ describe('Negative numbers & brackets notations', () => {
 
         // Focus in the input
         negativeBracketsInput1.click();
-        expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('+1.234,57');
+        expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('+1.234,57'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
         browser.keys(['Tab']);
         expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('+1.234,57');
 
@@ -1575,7 +1617,7 @@ describe('Negative numbers & brackets notations', () => {
 
         // Focus in the input
         negativeBracketsInput1.click();
-        expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('+1.234,57');
+        expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('+1.234,57'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
         browser.keys(['Home', '-', 'Tab']);
 
         expect(browser.getValue(selectors.negativeBracketsInput2)).toEqual('1.234,57+');
@@ -1625,7 +1667,7 @@ describe('Negative numbers & brackets notations', () => {
 
         // Focus in the input
         negativeBracketsInput1.click();
-        expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('-1.234,57');
+        expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('-1.234,57'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
         browser.keys(['End', '+']);
         expect(browser.getValue(selectors.negativeBracketsInput1)).toEqual('+1.234,57');
 
@@ -3523,7 +3565,7 @@ describe('`negativeSignCharacter` option', () => {
         $(selectors.issue478RightPlacementPos1).click(); // Focus on the input element
         expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('14.00p');
         browser.keys(['Home', '+']);
-        expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('14.00-');
+        expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('14.00-'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
         browser.keys(['Home', '+']);
         expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('14.00p');
         browser.keys('+');
@@ -3583,7 +3625,7 @@ describe('`negativeSignCharacter` option', () => {
         expect(inputCaretPosition.end).toEqual(8);
 
         browser.keys(['End', '+']);
-        expect(browser.getValue(selectors.issue478RightPlacementNegPos)).toEqual('1,234.78∸');
+        expect(browser.getValue(selectors.issue478RightPlacementNegPos)).toEqual('1,234.78∸'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
         // Check that the caret position is at the correct position
         inputCaretPosition = browser.execute(domId => {
             const input = document.querySelector(domId);
@@ -3605,7 +3647,7 @@ describe('`negativeSignCharacter` option', () => {
 
     it('should not allow setting the positive state using the custom positive sign', () => {
         $(selectors.issue478RightPlacementPos1).click(); // Focus on the input element
-        expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('23,414.00p');
+        expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('23,414.00p'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
         browser.keys(['Home', '+']);
         expect(browser.getValue(selectors.issue478RightPlacementPos1)).toEqual('23,414.00-');
         browser.keys('+');
@@ -3834,5 +3876,419 @@ describe('Issue #535', () => {
         expect(browser.getValue(selectors.issue535)).toEqual('123456');
     });
 });
+
+describe('Issue #550', () => {
+    it('should test for default values, and focus on it', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue550)).toEqual('(1,357,246.81)');
+    });
+
+    it(`should not send a 'change' event when focusing then blurring the input`, () => {
+        const input = $(selectors.issue550);
+        input.click();
+        const inputBlur = $(selectors.issue550Blur);
+        inputBlur.click();
+
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('0');
+
+        // Reset the change event counter
+        $(selectors.issue550Button).click();
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('0');
+    });
+
+    it(`should send a single 'change' event when modifying the value, then blurring`, () => {
+        const input = $(selectors.issue550);
+        const inputBlur = $(selectors.issue550Blur);
+        input.click();
+
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('0');
+        browser.keys(['Home', '5']);
+        expect(browser.getValue(selectors.issue550)).toEqual('-51,357,246.81');
+        inputBlur.click();
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('1');
+
+        // Modify the input again
+        input.click();
+        browser.keys(['Home', '6']);
+        expect(browser.getValue(selectors.issue550)).toEqual('-651,357,246.81');
+        inputBlur.click();
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('2');
+        input.click();
+        browser.keys(['Home', '2']);
+        expect(browser.getValue(selectors.issue550)).toEqual('-2,651,357,246.81');
+        inputBlur.click();
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('3');
+
+        // Reset the change event counter
+        $(selectors.issue550Button).click();
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('0');
+    });
+
+    it(`should send a single 'change' event when modifying the value, then hitting the enter key (and then blurring the input)`, () => {
+        const input = $(selectors.issue550);
+        const inputBlur = $(selectors.issue550Blur);
+        input.click();
+
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('0');
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue550)).toEqual('-12,651,357,246.81');
+        browser.keys('Enter');
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('1');
+        inputBlur.click();
+        expect(browser.getValue(selectors.issue550ChangeDetector)).toEqual('1');
+    });
+});
+
+describe('Issue #521', () => {
+    it('should test for default values, and focus on it', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue521)).toEqual('');
+        expect(browser.getValue(selectors.issue521Set)).toEqual('1,234.57');
+
+        // Prepare the text to paste
+        const inputClassic = $(selectors.inputClassic);
+        inputClassic.click();
+        expect(browser.getValue(selectors.inputClassic)).toEqual('987654321');
+        browser.keys(['Home', 'Shift', 'ArrowRight', 'ArrowRight', 'Shift']);
+        browser.keys(['Control', 'c', 'Control']); // 98 in the clipboard
+    });
+
+    it(`should send an 'input' event when pasting a valid value in an empty input`, () => {
+        const input = $(selectors.issue521);
+        input.click();
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('0');
+        browser.keys(['Control', 'v', 'Control']); // Paste
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('1');
+        expect(browser.getValue(selectors.issue521)).toEqual('98.00');
+
+        // Reset the input event counter
+        $(selectors.issue521Button).click();
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('0');
+    });
+
+    it(`should send an 'input' event when pasting a valid value at a caret position in an non-empty input`, () => {
+        const input = $(selectors.issue521Set);
+        input.click();
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('0');
+
+        browser.keys(['Home', 'ArrowRight', 'ArrowRight']); // Move the caret
+        browser.keys(['Control', 'v', 'Control']); // Paste
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('1');
+        expect(browser.getValue(selectors.issue521Set)).toEqual('129,834.57');
+
+        // Reset the change event counter
+        $(selectors.issue521Button).click();
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('0');
+    });
+
+    it(`should send an 'input' event when pasting a valid value in an non-empty input with all its content selected`, () => {
+        const input = $(selectors.issue521Set);
+        input.click();
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('0');
+
+        browser.keys(['Home', 'Shift', 'End', 'Shift']); // Select all the input content
+        browser.keys(['Control', 'v', 'Control']); // Paste
+        expect(browser.getValue(selectors.issue521InputDetector)).toEqual('1');
+        expect(browser.getValue(selectors.issue521Set)).toEqual('98.00');
+    });
+});
+
+describe('Issue #574', () => {
+    it('should test for default values, and focus on it', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue574)).toEqual('-0.05');
+    });
+
+    it(`should send an 'input' event when pasting a valid value in an empty input`, () => {
+        const input = $(selectors.issue574);
+        input.click();
+        browser.keys(['Home', 'ArrowRight', 'ArrowRight', '-']);
+        expect(browser.getValue(selectors.issue574)).toEqual('0.05');
+        browser.keys(['-']);
+        expect(browser.getValue(selectors.issue574)).toEqual('-0.05');
+    });
+});
+
+describe('Issue #559', () => {
+    it('should test for default values, and focus on it', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue559)).toEqual('12,345.68');
+        expect(browser.getValue(selectors.issue559Default)).toEqual('');
+    });
+
+    it(`should accept a decimal character on the far left of a negative number, when the \`alwaysAllowDecimalCharacter\` option is set to \`false\``, () => {
+        const input = $(selectors.issue559Default);
+        input.click();
+        browser.keys(['-12345']);
+        browser.keys(['Home', '.']);
+        expect(browser.getValue(selectors.issue559Default)).toEqual('-0.12');
+    });
+
+    it(`should not accept a decimal character if one is already present, by default`, () => {
+        const input = $(selectors.issue559Default);
+        input.click();
+        browser.keys(['Control', 'a', 'Control', 'Backspace', '-12345.67']);
+        expect(browser.getValue(selectors.issue559Default)).toEqual('-12,345.67');
+        browser.keys(['Home', 'ArrowRight', 'ArrowRight', '.']);
+        expect(browser.getValue(selectors.issue559Default)).toEqual('-12,345.67');
+    });
+
+    it(`should accept a decimal character everywhere, when the \`alwaysAllowDecimalCharacter\` option is set to \`true\``, () => {
+        const input = $(selectors.issue559);
+        input.click();
+        browser.keys(['Home', 'ArrowRight', 'ArrowRight', 'ArrowRight', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('123.45');
+        browser.keys(['End', 'ArrowLeft', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('1,234.5');
+        browser.keys(['Home', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('0.12');
+
+        // And with a negative number
+        browser.keys(['Esc', 'Backspace', '-12345']);
+        browser.keys(['Home', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('-0.12');
+
+        browser.keys(['Control', 'a', 'Control', 'Backspace', '-12345', 'Home', 'ArrowRight', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('-0.12');
+
+        // Test that entering a decimal character on another decimal character works (and moves the caret to the right)
+        browser.keys(['Control', 'a', 'Control', 'Backspace', '-12345']);
+        browser.keys(['Home', 'ArrowRight', 'ArrowRight', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('-1.23');
+        browser.keys(['ArrowLeft', '.']);
+        expect(browser.getValue(selectors.issue559)).toEqual('-1.23');
+        browser.keys(['6']);
+        expect(browser.getValue(selectors.issue559)).toEqual('-1.62');
+    });
+});
+
+describe('Issue #593', () => {
+    it('should test for default values, and focus on it', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue593)).toEqual('-1,00 €');
+        expect(browser.getValue(selectors.issue593Paste)).toEqual('-1234');
+    });
+
+    it(`should correctly paste a negative value on a negative value using the French predefined option`, () => {
+        // Copy the text to paste
+        const inputPaste = $(selectors.issue593Paste);
+        inputPaste.click();
+        browser.keys(['Control', 'a', 'c', 'Control']);
+
+        // Paste into the AutoNumeric element with the default `onInvalidPaste` option
+        browser.keys(['Shift', 'Tab', 'Shift']); // Go to the other input
+        browser.keys(['Control', 'v', 'Control']);
+        expect(browser.getValue(selectors.issue593)).toEqual('-1.234,00 €');
+        // Also test the caret position after the paste
+        let inputCaretPosition = browser.execute(domId => {
+            const input = document.querySelector(domId);
+            return { start: input.selectionStart, end: input.selectionEnd };
+        }, selectors.issue593).value;
+        expect(inputCaretPosition.start).toEqual(6);
+
+        // Paste into the other AutoNumeric element with the `truncate` `onInvalidPaste` option
+        browser.keys(['Shift', 'Tab', 'Shift']); // Go to the other input
+        browser.keys(['Control', 'v', 'Control']);
+        expect(browser.getValue(selectors.issue593Truncate)).toEqual('-1.234,00 €');
+        // Also test the caret position after the paste
+        inputCaretPosition = browser.execute(domId => {
+            const input = document.querySelector(domId);
+            return { start: input.selectionStart, end: input.selectionEnd };
+        }, selectors.issue593Truncate).value;
+        expect(inputCaretPosition.start).toEqual(6);
+    });
+
+    it(`should correctly paste a negative value on a positive value using the French predefined option`, () => {
+        // Copy the text to paste
+        const inputPaste = $(selectors.issue593Paste);
+        inputPaste.click();
+        browser.keys(['Control', 'a', 'c', 'Control']);
+
+        // Paste into the AutoNumeric element with the default `onInvalidPaste` option
+        browser.keys(['Shift', 'Tab', 'Shift']); // Go to the other input
+        browser.keys(['Home', '-']); // Switch to a positive number
+        browser.keys(['Control', 'a', 'v', 'Control']);
+        expect(browser.getValue(selectors.issue593)).toEqual('-1.234,00 €');
+        // Also test the caret position after the paste
+        /*
+        let inputCaretPosition = browser.execute(domId => {
+            const input = document.querySelector(domId);
+            return { start: input.selectionStart, end: input.selectionEnd };
+        }, selectors.issue593).value;
+        expect(inputCaretPosition.start).toEqual(6);
+        */ //FIXME Manually this returns the correct caret position, with selenium it fails
+
+        // Paste into the other AutoNumeric element with the `truncate` `onInvalidPaste` option
+        browser.keys(['Shift', 'Tab', 'Shift']); // Go to the other input
+        browser.keys(['Home', '-']); // Switch to a positive number
+        browser.keys(['Control', 'a', 'v', 'Control']);
+        expect(browser.getValue(selectors.issue593Truncate)).toEqual('-1.234,00 €');
+        // Also test the caret position after the paste
+        /*
+        inputCaretPosition = browser.execute(domId => {
+            const input = document.querySelector(domId);
+            return { start: input.selectionStart, end: input.selectionEnd };
+        }, selectors.issue593Truncate).value;
+        expect(inputCaretPosition.start).toEqual(6);
+        */ //FIXME Manually this returns the correct caret position, with selenium it fails
+    });
+});
+
+describe('Issue #594', () => {
+    it('should test for default values', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue594Left)).toEqual('');
+        expect(browser.getValue(selectors.issue594Right)).toEqual('');
+    });
+
+    it(`should display the negative sign on the left side of the currency symbol when the element is empty`, () => {
+        const input = $(selectors.issue594Left);
+        input.click();
+        expect(browser.getValue(selectors.issue594Left)).toEqual(' €');
+        browser.keys(['-']);
+        expect(browser.getValue(selectors.issue594Left)).toEqual('- €');
+
+        // Check the caret position
+        const inputCaretPosition = browser.execute(domId => {
+            const input = document.querySelector(domId);
+            return { start: input.selectionStart, end: input.selectionEnd };
+        }, selectors.issue594Left).value;
+        expect(inputCaretPosition.start).toEqual(1);
+    });
+
+    it(`should display the negative sign on the right side of the currency symbol when the element is empty`, () => {
+        const input = $(selectors.issue594Right);
+        input.click();
+        expect(browser.getValue(selectors.issue594Right)).toEqual(' €');
+        browser.keys(['-']);
+        expect(browser.getValue(selectors.issue594Right)).toEqual(' €-');
+
+        // Check the caret position
+        const inputCaretPosition = browser.execute(domId => {
+            const input = document.querySelector(domId);
+            return { start: input.selectionStart, end: input.selectionEnd };
+        }, selectors.issue594Right).value;
+        expect(inputCaretPosition.start).toEqual(0);
+    });
+});
+
+xdescribe('Issue #542', () => {
+    it('should test for default values', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue542On)).toEqual('1,234,567.89');
+        expect(browser.getValue(selectors.issue542Off)).toEqual('1,234,567.89');
+    });
+
+    it(`should not allow formula mode on default AutoNumeric elements`, () => {
+        const input = $(selectors.issue542Off);
+        input.click();
+        browser.keys(['Home', '=']);
+        expect(browser.getValue(selectors.issue542Off)).toEqual('1,234,567.89');
+    });
+
+    it(`should allow formula mode on AutoNumeric elements with the \`formulaMode\` option set to \`true\``, () => {
+        const input = $(selectors.issue542On);
+        input.click();
+
+
+        browser.keys(['Esc', '666777.88']);
+        expect(browser.getValue(selectors.issue542Off)).toEqual('666,777.88'); //XXX Fails in Chrome, not in Firefox
+        browser.keys(['Esc']);
+        expect(browser.getValue(selectors.issue542Off)).toEqual('1,234,567.89');
+        browser.keys(['Esc', '666777.88', 'Enter']); // Save the rawValue
+        expect(browser.getValue(selectors.issue542Off)).toEqual('666,777.88');
+        browser.keys(['Esc']);
+        expect(browser.getValue(selectors.issue542Off)).toEqual('666,777.88');
+        // Start editing the value as usual
+        browser.keys(['12345']);
+        expect(browser.getValue(selectors.issue542Off)).toEqual('12,345');
+
+        // Then enter formula mode
+        browser.keys(['=']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('=');
+        browser.keys(['12+ 24.11']); //XXX The chromedriver bugs and does not accepts the '+' character
+        expect(browser.getValue(selectors.issue542On)).toEqual('=12+ 24.11');
+        browser.keys(['foobar']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('=12+ 24.11');
+        browser.keys(['-( 2/ (12+5))']); //XXX The geckodriver bugs and does not accepts the '(' and ')' characters
+        expect(browser.getValue(selectors.issue542On)).toEqual('=12+ 24.11-( 2/ (12+5))');
+
+        // Cancel the formula
+        browser.keys(['Esc']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('12,345.00');
+        // Check that hitting `esc` a second time changes the value to the last saved one, not the one before entering the formula mode
+        browser.keys(['Esc']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('666,777.88');
+
+        // Validate the formula with Enter
+        browser.keys(['=']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('=');
+        browser.keys(['-10000 + 12+ 24.16-( 1044/ (12))', 'Enter']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('-10,050.84');
+
+        // Validate the formula with Blur
+        browser.keys(['=']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('=');
+        browser.keys(['-60000 + 12+ 24.16-( 1044/ (12))']);
+        expect(browser.getValue(selectors.issue542On)).toEqual('=-60000 + 12+ 24.16-( 1044/ (12))');
+        const input2 = $(selectors.issue542Off);
+        input2.click(); // Blur
+        expect(browser.getValue(selectors.issue542On)).toEqual('-60,050.84');
+    });
+
+    //TODO Add the tests when using a custom `decimalCharacter`
+});
+
+describe('Issue #611', () => {
+    it('should test for default values', () => {
+        browser.url(testUrl);
+
+        expect(browser.getValue(selectors.issue611HtmlReadOnly)).toEqual('224,466.88');
+        expect(browser.getValue(selectors.issue611OptionReadOnly)).toEqual('11,224,466.88');
+        expect(browser.getValue(selectors.issue611HtmlAndOptionReadOnly)).toEqual('4,466.88');
+    });
+
+    it(`should not allow entering anything in an element set read-only via its html attribute`, () => {
+        const input = $(selectors.issue611HtmlReadOnly);
+        input.click();
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue611HtmlReadOnly)).toEqual('224,466.88');
+    });
+
+    xit(`should allow modifying the element value if the html read-only attribute is removed dynamically`, () => {
+        const input = $(selectors.issue611HtmlReadOnly);
+        input.click();
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue611HtmlReadOnly)).toEqual('224,466.88');
+        browser.execute(domId => { document.querySelector(domId).readOnly = false; }, selectors.issue611HtmlReadOnly);
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue611HtmlReadOnly)).toEqual('1,224,466.88'); //FIXME Fails on Chrome only; there is a bug in the selenium chromedriver
+    });
+
+    it(`should still not allow modifying the element value if the html read-only attribute is removed dynamically, but the \`readOnly\` option is set to \`true\``, () => {
+        const input = $(selectors.issue611HtmlAndOptionReadOnly);
+        input.click();
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue611HtmlAndOptionReadOnly)).toEqual('4,466.88');
+        browser.execute(domId => { document.querySelector(domId).readOnly = false; }, selectors.issue611HtmlAndOptionReadOnly);
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue611HtmlAndOptionReadOnly)).toEqual('4,466.88');
+    });
+
+    it(`should not allow entering anything in an element set read-only via the AutoNumeric \`readOnly\` option`, () => {
+        const input = $(selectors.issue611OptionReadOnly);
+        input.click();
+        browser.keys(['Home', '1']);
+        expect(browser.getValue(selectors.issue611OptionReadOnly)).toEqual('11,224,466.88');
+    });
+});
+
 
 //TODO Add some tests to make sure the correct number of `AutoNumeric.events.formatted` is sent during each keypress

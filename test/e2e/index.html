@@ -179,6 +179,7 @@
 	</style>
 	<!-- Used by the end-to-end server spin up for the tests : -->
 	<script src="/autonumeric"></script>
+	<!--<script src="../../dist/autoNumeric.min.js"></script>-->
 	<script src="../../dist/autoNumeric.js"></script>
 	<!-- ^ Used by the page when calling it manually directly in the browser -->
 </head>
@@ -495,6 +496,7 @@
 			<div>
 				<p id="contentEditable1" contenteditable="true"></p>
 				<p id="contentEditable2" contenteditable="true">12345678.9012</p>
+				<p id="contentEditableNotActivatedYet" contenteditable="false">123456.789</p>
 				<p id="contentEditableNotActivated" contenteditable="false">69.02</p>
 			</div>
 		</div>
@@ -915,6 +917,153 @@
 			<input id="issue_535" type="text" placeholder="#535">
 		</div>
 	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #553</p>
+			<div>
+				<input id="issue_553_one" type="text">
+				<input id="issue_553_two" type="text">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #550</p>
+			<div>
+				<input id="issue_550" type="text" placeholder="" value="-1357246.81">
+				<input id="issue_550_blur" type="text" placeholder="Click here to blur">
+				<input id="issue_550_change_detector" type="text">
+				<button id="issue_550_button">Reset the change event tracker</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #521</p>
+			<div>
+				<input id="issue_521" type="text" value="">
+				<input id="issue_521_set" type="text" value="1234.567">
+				<input id="issue_521_input_detector" type="text">
+				<button id="issue_521_button">Reset the input event tracker</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #574</p>
+			<input id="issue_574" type="text" placeholder="#574">
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #559</p>
+			<div>
+				<input id="issue_559" type="text" placeholder="#559" value="12345.6789">
+				<input id="issue_559_2" type="text" placeholder="#559" value="">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #589</p>
+			<div>
+				<input id="issue_589_eu" type="text" placeholder="#589" value="0.123456789">
+				<input id="issue_589_us" type="text" placeholder="#589" value="0.123456789">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #593</p>
+			<div>
+				<input id="issue_593_truncate" type="text" placeholder="#593">
+				<input id="issue_593" type="text" placeholder="#593">
+				<input id="issue_593_paste" type="text" placeholder="#593" value="-1234">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #596</p>
+			<div>
+				<input id="issue_596" type="text" placeholder="" value="-1357246.81">
+				<input id="issue_596_change_detector" type="text">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #219</p>
+			<div>
+				<form action="#" id="issue_219_form">
+					<input id="issue_219_1" type="text" placeholder="#219" value="1111.11">
+					<input id="issue_219_2" type="text" placeholder="#219" value="2222.22">
+					<input id="issue_219_3" type="text" placeholder="#219">
+					<input id="issue_219_4" type="text" placeholder="#219" value="0">
+					<input id="issue_219_5_no_an" type="text" placeholder="#219" value="Default Value">
+					<input id="issue_219_reset" type="reset" value="Reset">
+					<input id="issue_219_submit" type="submit" value="Submit">
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #594</p>
+			<div>
+				<input id="issue_594_left" type="text" placeholder="#594">
+				<input id="issue_594_right" type="text" placeholder="#594">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #598</p>
+			<input id="issue_598" type="text" placeholder="#598">
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #542</p>
+			<div>
+				<input id="issue_542_off" type="text" placeholder="#542 'off'">
+				<input id="issue_542_on" type="text" placeholder="#542 'on'">
+				<input id="issue_542_on_decimal_char" type="text" placeholder="#542 'on' decimal character">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #611</p>
+			<div>
+				<input id="issue_611_html_readonly" type="text" placeholder="#611 html read-only" readonly value="224466.88">
+				<input id="issue_611_option_readonly" type="text" placeholder="#611 option read-only" value="11224466.88">
+				<input id="issue_611_html_and_option_readonly" type="text" placeholder="#611 both ro" readonly value="4466.88">
+			</div>
+		</div>
+	</div>
+
+	<div class="testSuite">
+		<div class="test">
+			<p class="description">Issue #621</p>
+			<div>
+				<input id="issue_621" type="text" placeholder="#621" value="662736.82">
+			</div>
+		</div>
+	</div>
 </div>
 <script>
     //-------------- Classic input
@@ -1279,6 +1428,7 @@
     //-------------- contentEditable elements
     new AutoNumeric('#contentEditable1').french();
     new AutoNumeric('#contentEditable2').northAmerican();
+    new AutoNumeric('#contentEditableNotActivatedYet', { currencySymbol: '©' });
     new AutoNumeric('#contentEditableNotActivated').swiss();
 
     //-------------- Issue #395
@@ -1355,14 +1505,14 @@
 
     //-------------- decimalPlacesShownOnFocus and selections
     new AutoNumeric('#selection1')
-	    .french()
-	    .set(12266.1234567, { minimumValue: '0', maximumValue: '9999999', decimalPlaces: 3, decimalPlacesShownOnFocus: 6 });
+        .french()
+        .set(12266.1234567, { minimumValue: '0', maximumValue: '9999999', decimalPlaces: 3, decimalPlacesShownOnFocus: 6 });
 
     //-------------- showOnlyNumbersOnFocus option
     new AutoNumeric('#showOnlyNumbersOnFocus1').french()
-	    .set(-246813.58, { showOnlyNumbersOnFocus: AutoNumeric.options.showOnlyNumbersOnFocus.onlyNumbers, suffixText: ' loan' });
+        .set(-246813.58, { showOnlyNumbersOnFocus: AutoNumeric.options.showOnlyNumbersOnFocus.onlyNumbers, suffixText: ' loan' });
     new AutoNumeric('#showOnlyNumbersOnFocus2').northAmerican()
-	    .set(-246813.58, { showOnlyNumbersOnFocus: AutoNumeric.options.showOnlyNumbersOnFocus.onlyNumbers, suffixText: ' interest' });
+        .set(-246813.58, { showOnlyNumbersOnFocus: AutoNumeric.options.showOnlyNumbersOnFocus.onlyNumbers, suffixText: ' interest' });
 
     //-------------- selectOnFocus option
     new AutoNumeric('#selectOnFocusA').french().set(-246813.58, { selectOnFocus: AutoNumeric.options.selectOnFocus.select });
@@ -1741,7 +1891,9 @@
     new AutoNumeric('#selectOnFocus40').french().update(doNotSelectOption).update(case40);
 
     //-------------- AutoNumeric events
-    new AutoNumeric('#autoNumericEventInput');
+    new AutoNumeric('#autoNumericEventInput', {
+        negativeBracketsTypeOnBlur: AutoNumeric.options.negativeBracketsTypeOnBlur.parentheses,
+    });
 //	    .update({ valuesToStrings : AutoNumeric.options.valuesToStrings.zeroDash }); //DEBUG
     const autoNumericEventInput = document.querySelector('#autoNumericEventInput');
     autoNumericEventInput.addEventListener(AutoNumeric.events.formatted, e => {
@@ -1749,6 +1901,12 @@
     });
     autoNumericEventInput.addEventListener(AutoNumeric.events.rawValueModified, e => {
         console.log(`'${AutoNumeric.events.rawValueModified}' sent with`, e); //DEBUG
+    });
+    autoNumericEventInput.addEventListener(AutoNumeric.events.native.change, e => {
+        console.log(`'${AutoNumeric.events.native.change}' sent with`, e); //DEBUG
+    });
+    autoNumericEventInput.addEventListener(AutoNumeric.events.native.input, e => {
+        console.log(`'${AutoNumeric.events.native.input}' sent with`, e); //DEBUG
     });
 
     //-------------- Issue #442 & #457
@@ -1959,6 +2117,136 @@
         minimumValue               : 0,
         decimalCharacter           : ',',
         decimalCharacterAlternative: '.'
+    });
+
+    //-------------- Issue #553
+    new AutoNumeric('#issue_553_one', 1.23e-13, { decimalPlaces: 2 });
+    new AutoNumeric('#issue_553_two', -123.4567e-6, { decimalPlaces: 10 });
+
+    //-------------- Issue #550
+    new AutoNumeric('#issue_550', {
+        negativeBracketsTypeOnBlur: AutoNumeric.options.negativeBracketsTypeOnBlur.parentheses,
+    });
+    const issue550 = document.querySelector('#issue_550');
+    const issue550ChangeDetector = document.querySelector('#issue_550_change_detector');
+    const issue550Button = document.querySelector('#issue_550_button');
+
+    let issue550ChangeCount = 0;
+    issue550ChangeDetector.value = 0;
+
+    issue550.addEventListener('change', () => {
+        issue550ChangeDetector.value = ++issue550ChangeCount;
+    });
+    issue550Button.addEventListener('click', () => {
+        issue550ChangeCount = 0;
+        issue550ChangeDetector.value = 0;
+    });
+
+    //-------------- Issue #521
+    new AutoNumeric('#issue_521');
+    new AutoNumeric('#issue_521_set');
+    const issue521 = document.querySelector('#issue_521');
+    const issue521Set = document.querySelector('#issue_521_set');
+    const issue521InputDetector = document.querySelector('#issue_521_input_detector');
+    const issue521Button = document.querySelector('#issue_521_button');
+
+    let issue521InputCount = 0;
+    issue521InputDetector.value = 0;
+
+    issue521.addEventListener('input', () => {
+        issue521InputDetector.value = ++issue521InputCount;
+    });
+    issue521Set.addEventListener('input', () => {
+        issue521InputDetector.value = ++issue521InputCount;
+    });
+    issue521Button.addEventListener('click', () => {
+        issue521InputCount = 0;
+        issue521InputDetector.value = 0;
+    });
+
+    //-------------- Issue #574
+    new AutoNumeric('#issue_574', -0.05);
+
+    //-------------- Issue #559
+    new AutoNumeric('#issue_559', { alwaysAllowDecimalCharacter: true });
+    new AutoNumeric('#issue_559_2', { alwaysAllowDecimalCharacter: false });
+
+    //-------------- Issue #589
+    const an589EU = new AutoNumeric('#issue_589_eu', AutoNumeric.getPredefinedOptions().percentageEU3dec);
+    an589EU.node().addEventListener('input', () => {
+        console.log('an589EU.getNumericString():', an589EU.getNumericString()); //DEBUG
+    }, false);
+    const an589US = new AutoNumeric('#issue_589_us', AutoNumeric.getPredefinedOptions().percentageUS3dec);
+    an589US.node().addEventListener('input', () => {
+        console.log('an589EU.getNumericString():', an589US.getNumericString()); //DEBUG
+    }, false);
+
+    //-------------- Issue #593
+    new AutoNumeric('#issue_593_truncate', -1, ['French', { onInvalidPaste: AutoNumeric.options.onInvalidPaste.truncate }]);
+    new AutoNumeric('#issue_593', -1, 'French');
+
+    //-------------- Issue #596
+    const issue596 = new AutoNumeric('#issue_596');
+    const issue596ChangeDetector = document.querySelector('#issue_596_change_detector');
+
+    let issue596ChangeCount = 0;
+    issue596ChangeDetector.value = 0;
+
+    issue596.node().addEventListener('change', () => {
+        console.log(`Change detected with value '${issue596.getNumericString()}'`); //DEBUG
+        issue596ChangeDetector.value = ++issue596ChangeCount;
+    });
+
+    //-------------- Issue #219
+    new AutoNumeric('#issue_219_1', 1).french();
+    new AutoNumeric('#issue_219_2', 2).northAmerican();
+    new AutoNumeric('#issue_219_3', 3.2345).french();
+    new AutoNumeric('#issue_219_4', 4.678).french();
+    document.getElementById('issue_219_5_no_an').value = 'Modified value';
+    const form219 = document.getElementById('issue_219_form');
+    form219.addEventListener('submit', e => {
+        console.log('Form submit detected', e); //DEBUG
+        e.preventDefault();
+    });
+    form219.addEventListener('reset', e => {
+        console.log('Form reset detected', e); //DEBUG
+    });
+
+    //-------------- Issue #594
+    new AutoNumeric('#issue_594_left').french();
+    new AutoNumeric('#issue_594_right', ['French', { negativePositiveSignPlacement: AutoNumeric.options.negativePositiveSignPlacement.right }]);
+
+    //-------------- Issue #598
+    new AutoNumeric('#issue_598', 1234567.89, { unformatOnHover: false });
+
+    //-------------- Issue #542
+    new AutoNumeric('#issue_542_on', 1234567.89, { formulaMode: true });
+    new AutoNumeric('#issue_542_off', 1234567.89);
+    new AutoNumeric('#issue_542_on_decimal_char', 1234567.89, { formulaMode: true }).french();
+
+    //-------------- Issue #611
+    new AutoNumeric('#issue_611_html_readonly', { readOnly: false });
+    new AutoNumeric('#issue_611_option_readonly',  { readOnly: true });
+    new AutoNumeric('#issue_611_html_and_option_readonly', { readOnly: true });
+
+    //-------------- Issue #621
+    const issue621an = new AutoNumeric('#issue_621');
+    const issue621 = document.querySelector("#issue_621");
+    let backspaceCounter = 0;
+    issue621.addEventListener('keydown', e => {
+        if (e.keyCode === 8) {
+            backspaceCounter++;
+            console.log(`keydown Backspace ${backspaceCounter}`);
+        }
+    });
+    issue621.addEventListener('input', () => {
+        console.log(`${backspaceCounter} : input`);
+    });
+    issue621.addEventListener('keyup', () => {
+        console.log(`${backspaceCounter} : keyup`);
+    });
+    issue621.addEventListener("autoNumeric:formatted", () => {
+        console.log(`===> Formatted: ${issue621an.getFormatted()}`);
     });
 </script>
 </body>

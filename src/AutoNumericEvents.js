@@ -32,20 +32,22 @@ import AutoNumeric from './AutoNumeric';
 /**
  * Event list managed by AutoNumeric
  *
- * @type {{initialized: string, formatted: string, minRangeExceeded: string, maxRangeExceeded: string, native: {input: string, change: string}}}
+ * @type {{initialized: string, invalidFormula: string, formatted: string, minRangeExceeded: string, maxRangeExceeded: string, native: {input: string, change: string}, validFormula: string}}
  */
-Object.defineProperty(AutoNumeric, 'events', {
-    get() {
-        return {
-            initialized     : 'autoNumeric:initialized',
-            formatted       : 'autoNumeric:formatted',
-            rawValueModified: 'autoNumeric:rawValueModified',
-            minRangeExceeded: 'autoNumeric:minExceeded',
-            maxRangeExceeded: 'autoNumeric:maxExceeded',
-            native          : {
-                input : 'input',
-                change: 'change',
-            },
-        };
+AutoNumeric.events = {
+    initialized     : 'autoNumeric:initialized',
+    invalidFormula  : 'autoNumeric:invalidFormula',
+    formatted       : 'autoNumeric:formatted',
+    rawValueModified: 'autoNumeric:rawValueModified',
+    minRangeExceeded: 'autoNumeric:minExceeded',
+    maxRangeExceeded: 'autoNumeric:maxExceeded',
+    native          : {
+        input : 'input',
+        change: 'change',
     },
-});
+    validFormula    : 'autoNumeric:validFormula',
+};
+
+Object.freeze(AutoNumeric.events.native);
+Object.freeze(AutoNumeric.events);
+Object.defineProperty(AutoNumeric, 'events', { configurable: false, writable: false });

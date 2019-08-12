@@ -156,6 +156,16 @@ export default class AutoNumericHelper {
     }
 
     /**
+     * Return `true` if the given character is a number (0 to 9)
+     *
+     * @param {char} char
+     * @returns {boolean}
+     */
+    static isDigit(char) {
+        return /\d/.test(char);
+    }
+
+    /**
      * Return `true` if the parameter is a number (or a number written as a string).
      * This version also accepts Arabic and Persian numbers.
      *
@@ -389,7 +399,12 @@ export default class AutoNumericHelper {
                     result = AutoNumericEnum.keyName.CrSel;
                     break;
                 case 'Decimal':
-                    result = AutoNumericEnum.keyName.NumpadDot;
+                    if (event.char) {
+                        // this fixes #602
+                        result = event.char;
+                    } else {
+                        result = AutoNumericEnum.keyName.NumpadDot;
+                    }
                     break;
                 case 'Del':
                     browser = this.browser();
@@ -493,6 +508,8 @@ export default class AutoNumericHelper {
      * Return `true` if the given number is negative, or if the given string contains a negative sign :
      * - everywhere in the string (by default), or
      * - on the first character only if the `checkEverywhere` parameter is set to `false`.
+     *
+     * Note: `-0` is not a negative number since it's equal to `0`.
      *
      * @param {number|string} numberOrNumericString A Number, or a number represented by a string
      * @param {string} negativeSignCharacter The single character that represent the negative sign
@@ -1457,5 +1474,101 @@ export default class AutoNumericHelper {
         }
 
         return key;
+    }
+
+    /**
+     * Insert the single character `char` in the string `str` at the given position `index`
+     *
+     * @param {string} str
+     * @param {string} char
+     * @param {int} index
+     * @returns {string}
+     */
+    static insertAt(str, char, index) {
+        str = String(str);
+
+        if (index > str.length) {
+            throw new Error(`The given index is out of the string range.`);
+        }
+
+        if (char.length !== 1) {
+            throw new Error('The given string `char` should be only one character long.');
+        }
+
+        if (str === '' && index === 0) {
+            return char;
+        }
+
+        return `${str.slice(0, index)}${char}${str.slice(index)}`;
+    }
+
+    /**
+     * Convert the given scientific notation to the 'expanded' decimal notation
+     *
+     * @example scientificToDecimal('-123.4567e-6') returns '-0.0001234567'
+     *
+     * @param {number|string} val
+     * @returns {number|string}
+     */
+    static scientificToDecimal(val) {
+        // Check that the val is a Number
+        const numericValue = Number(val);
+        if (isNaN(numericValue)) {
+            return NaN;
+        }
+
+        // Check if the number is in a scientific notation
+        val                = String(val);
+        const isScientific = this.contains(val, 'e') || this.contains(val, 'E');
+
+        if (!isScientific) {
+            return val;
+        }
+
+        // Convert the scientific notation to a numeric string
+        let [value, exponent] = val.split(/e/i);
+        const isNegative = value < 0;
+        if (isNegative) {
+            value = value.replace('-', '');
+        }
+
+        const isNegativeExponent = +exponent < 0;
+        if (isNegativeExponent) {
+            exponent = exponent.replace('-', ''); // Remove the negative sign
+        }
+
+        const [int, float] = value.split(/\./);
+
+        let result;
+        if (isNegativeExponent) {
+            if (int.length > exponent) {
+                // Place the decimal point at the int length count minus exponent
+                result = this.insertAt(int, '.', int.length - exponent);
+            } else {
+                // If that decimal point is greater than the int length, pad with zeros (ie. Number('-123.4567e-6') --> -0.0001234567)
+                result = `0.${'0'.repeat(exponent - int.length)}${int}`;
+            }
+
+            result = `${result}${float?float:''}`;
+        } else { // Positive exponent
+            if (float) {
+                value = `${int}${float}`; // Remove the '.', if any
+                if (exponent < float.length) {
+                    result = this.insertAt(value, '.', +exponent + int.length);
+                } else {
+                    result = `${value}${'0'.repeat(exponent - float.length)}`;
+                }
+            } else {
+                value = value.replace('.', ''); // Single case where val is '1.e4'
+                result = `${value}${'0'.repeat(Number(exponent))}`;
+            }
+        }
+
+        if (isNegative) {
+            // Put back the negative sign, if any
+            result = `-${result}`;
+        }
+
+        return result;
     }
 }

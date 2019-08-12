@@ -1,9 +1,8 @@
 /**
- * Temporary hack for allowing `yarn`/`npm` to install correctly under
- * Unix and windows systems
+ * Math expression tokenizer/parser/evaluator functions for autoNumeric.js
  *
  * @author Alexandre Bonneau <alexandre.bonneau@linuxfr.eu>
- * @copyright © 2017 Alexandre Bonneau
+ * @copyright © 2018 Alexandre Bonneau
  *
  * The MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
@@ -29,28 +28,44 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* global require */
-/* eslint no-console: 0 */
-/* eslint prefer-arrow-callback: 0 */
-/* eslint spaced-comment: 0 */
-
-/*
- * This is a hack to circumvent the problem when calling `test -e node_modules/phantomjs-prebuilt/install.js && node node_modules/phantomjs-prebuilt/install.js; true` on windows environment.
- * cf. issue #384 (https://github.com/autoNumeric/autoNumeric/issues/384)
+/**
+ * The Abstract Syntax Tree node
+ *
+ * Each node carries the node information such as type (operator type), value (if it's a leaf), and the left and right branches
  */
-const exec = require('child_process').exec;
-const fs = require('fs');
+export default class ASTNode {
+    /*
+    constructor() {
+        // this.type = void(0);
+        // this.value = 0;
+        // this.left = null;
+        // this.right = null;
+    }
+    */
 
-const phantomJsPrebuiltInstallPath = 'node_modules/phantomjs-prebuilt/install.js';
-const cmd = 'node '+phantomJsPrebuiltInstallPath;
+    static createNode(type, left, right) {
+        const node = new ASTNode();
+        node.type = type;
+        node.left = left;
+        node.right = right;
 
-if (fs.existsSync(phantomJsPrebuiltInstallPath)) {
-    // Run the command
-    exec(cmd, function(error, stdout, stderr) {
-        console.log(stdout); // Command output
-        console.log(stderr);
-    });
+        return node;
+    }
+
+    static createUnaryNode(left) {
+        const node = new ASTNode();
+        node.type = 'unaryMinus';
+        node.left = left;
+        node.right = null;
+
+        return node;
+    }
+
+    static createLeaf(value) {
+        const node = new ASTNode();
+        node.type = 'number';
+        node.value = value;
+
+        return node;
+    }
 }
-/*else {
-    // otherwise do nothing
-}*/

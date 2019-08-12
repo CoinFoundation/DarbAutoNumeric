@@ -1,9 +1,8 @@
 /**
- * Temporary hack for allowing `yarn`/`npm` to install correctly under
- * Unix and windows systems
+ * Math expression tokenizer/parser/evaluator functions for autoNumeric.js
  *
  * @author Alexandre Bonneau <alexandre.bonneau@linuxfr.eu>
- * @copyright © 2017 Alexandre Bonneau
+ * @copyright © 2018 Alexandre Bonneau
  *
  * The MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
@@ -29,28 +28,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* global require */
-/* eslint no-console: 0 */
-/* eslint prefer-arrow-callback: 0 */
-/* eslint spaced-comment: 0 */
-
-/*
- * This is a hack to circumvent the problem when calling `test -e node_modules/phantomjs-prebuilt/install.js && node node_modules/phantomjs-prebuilt/install.js; true` on windows environment.
- * cf. issue #384 (https://github.com/autoNumeric/autoNumeric/issues/384)
+/**
+ * Data structure used by the Lexer and Parser classes
  */
-const exec = require('child_process').exec;
-const fs = require('fs');
-
-const phantomJsPrebuiltInstallPath = 'node_modules/phantomjs-prebuilt/install.js';
-const cmd = 'node '+phantomJsPrebuiltInstallPath;
-
-if (fs.existsSync(phantomJsPrebuiltInstallPath)) {
-    // Run the command
-    exec(cmd, function(error, stdout, stderr) {
-        console.log(stdout); // Command output
-        console.log(stderr);
-    });
+export default class Token {
+    constructor(type, value, symbol) {
+        this.type = type;
+        this.value = value;
+        this.symbol = symbol;
+    }
 }
-/*else {
-    // otherwise do nothing
-}*/

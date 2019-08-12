@@ -1,5 +1,146 @@
 ## Changelog for autoNumeric
 
+### 4.5.4
++ Fixes #626 Missing the `\u0092` digit group separator
+
+### 4.5.3
++ Fixes #622 `freezeOptions()` can create issues in some browsers
+
+### 4.5.2
++ Fixes #621 The `autoNumeric:formatted` event should be triggered when the input field is cleared while continuously pressing the `Backspace` or `Delete`keys
+
+### 4.5.1
++ Fixes #611 The html `readonly` attribute is ignored on initial load
++ Fix how readonly and disabled inputs should not process keyboard events
++ Fix the formula mode so that the custom decimal character set with `decimalCharacter` is used instead of the default `'.'` character when writing float numbers
+
+### 4.5.0
++ Closes #542 Allow basic calculations when entering expressions like `=12*78`
+  + Introduces the *formula mode* which allows a user to enter a math expression in the element using the `=` key, then evaluate it with the `Enter` one
+  + Adds the `formulaMode` option, set to `false` by default, that controls if the *formula mode* is enabled
++ Adds the `Lexer`, `Parser`, `Evaluator`, `ASTNode` and `Token` classes for managing math expressions
++ Fixes #612 Dist files contain eval
+  + The webpack `devtool` option for the `development` configuration has been changed from `cheap-module-eval-source-map` to `cheap-source-map`;
+    This removes any `eval()` from the generated `dist/autoNumeric.js` file, and makes the source maps works in all cases in the browsers
++ Merge the changes from `4.4.1` while making sure there is no regression with #609; this adds the `browser` field alongside the `main` one in `package.json`
+  + Note: The `browser` option points to the minified library `dist/autoNumeric.min.js`
++ Update the `index.html` test file to use the un-minified `development` library `dist/autoNumeric.js`
+  This allows to *temporarily* use forbidden functions like `console` or wrong formatting while debugging, using `yarn build:dev`
++ Fixes a call to `_reformatAltHovered()` even when the `unformatOnHover` option was set to `false`
+
+### 4.4.3
++ Fixes #598 The `unformatOnHover` config value isn't used when set to `false`
+
+### 4.4.2
++ Fixes #609 Uncaught Error: Cannot find module 'autonumeric' on v4.4.1
++ Reverts the changes from `4.4.1` : "Modify the `package.json` configuration `main` field to `browser`"
+
+### 4.4.1
++ Modify the `package.json` configuration `main` field to `browser`
+  + This is useful per npm's documentation when the module is using browser-specific features like the `window` object
+
+### 4.4.0
++ Closes #476 Add a feature where `emptyInputBehavior` could be set to the minimum or maximum value
+  + `emptyInputBehavior` now accepts either a number (or a string representing a number), or the `'min'` or `'max'` option
++ Fix the `emptyInputBehavior` validation test when checking the value limits
++ Fixes #579 Allow `emptyInputBehavior` to be set to min, max, or a number
+
+### 4.3.7
++ Fixes #594 Currency at wrong position for empty fields with euro/french preset after typing minus sign
++ Fixes #565 Entering a single minus character in a `negativeBracketsTypeOnBlur` input invert the currency sign and that minus sign
+
+### 4.3.6
++ Fixes #219 'Bug on form reset' that was re-opened
++ AutoNumeric now listens to the `reset` event on the parent form, and react accordingly if detected 
+
+### 4.3.5
++ Really fixes issue #596 this time
+
+### 4.3.4
++ Fixes #596 Change event not firing depending on cursor movement
+
+### 4.3.3
++ Fixes #593 Pasting a negative value over a negative value that as a currency symbol and its numbers selected throws an error
++ Refactor the `_onPaste()` handler by removing duplicated parts
++ Fix the initialization call `new AutoNumeric()` where using as arguments a `string` (element selector), a `number` (initial value) and an `array` (array of options), in that particular order, would not be recognized
+
+### 4.3.2
++ Fixes #589 The `percentageUS*` predefined options do not have the `rawValueDivisor` option set
+
+### 4.3.1
++ Modify the `tenTrillions` and `oneBillion` limits to be exact
++ Remove the `maximumValue` and `minimumValue` `tenTrillionsNoDecimals` option, and update `tenTrillions` so that it equals ten trillions
++ The `tenTrillions` sub-option is now equal to `'10000000000000'`, and the `oneBillion` sub-option is now equal to `'1000000000'`
++ This change was long overdue since we modified in `v4.0.0-beta.22` how the number of decimal places was defined by the user using the `decimalPlaces` options instead of adding a specific number of decimal to the min/max values.
+
+### 4.3.0
++ Fixes #559 Allow AutoNumeric to accept the decimal character input even when there is already one in the element
+  + Add the new `alwaysAllowDecimalCharacter` option set to `false` by default
++ Fixes AutoNumeric so that elements now correctly accepts entering a decimal char on the far left of a negative number
+
+### 4.2.15
++ Fixes #585 Internet Explorer 11 throws when freezing the options
+
+### 4.2.14
++ Fixes #526 Memory / speed improvement in options
++ Fixes #583 AutoNumeric `v4.2.13` forces the contenteditable attribute to `true` when set on the html source
++ Fixes #584 Event listeners are not set/reset on option updates
+
+### 4.2.13
++ Fixes #580 Allow non-input tags with the `readOnly` option to set the `contenteditable` attribute to `false`
++ Fix the `readonly` and `contenteditable` attributes so that they can be updated to read/write mode
++ Modify `_setReadOnly()` so that it *always* sets the element to read-only mode
++ Create a new `_setReadWrite()` function that sets the element to read-write mode
++ Create a new `_setWritePermissions()` function that sets the element read only/write mode according to the `readOnly` setting
++ Fix the urls to autonumeric.org in the readme
+
+### 4.2.12
++ Fixes #574 The fractional part is converted to an integer if the part on the cursor left-hand side is equal to 0
+
+### 4.2.11
++ Fixes #570 The minified version of AutoNumeric does not expose some of its static functions (ie. `AutoNumeric.getNumber()`)
+  + Removing the standard `Function.name` feature fixes the bug in IE now. In the near future IE users will need to require a polyfill for this.
++ Reduce the size of the generated library by tuning the UglifyJs options
++ Fix the end-to-end tests so that they are run against AutoNumeric's minified version 
+
+### 4.2.10
++ Fix various bugs regarding the incorrect static and instantiated function calls
++ Fix the polyfill so that `Array.from()` is correctly 'polyfilled' even if the `CustomEvent` object already exists
++ Fix the `CustomEvent` polyfill
++ Merges PR #572 Use `AutoNumericHelper.contains()` instead of `String.includes()` for the time being
++ Update the dev dependencies
++ Update the babel preset from `latest` to `env`
+
+### 4.2.9
++ Fixes #568 Using brackets for negative numbers in AutoNumeric.format returns "undefined"
+
+### 4.2.8
++ Fixes #566 Add the Turkish predefined currency
+
+### 4.2.7
++ Fixes #521 The `input` event is not fired on `paste` if the element is empty or is completely selected beforehand
++ Fixes #563 The `import AutoNumeric from 'AutoNumeric'` line in the readme does not work on case sensitive OS (like Linux)
+
+### 4.2.6
++ Fixes #561 Webpack bundles the already compiled library when imported in another project
+
+### 4.2.5
++ Fix issue #550 The `change` event is sent twice on change
++ Fix the bug when an input with the `negativeBracketsTypeOnBlur` options was focused then blurred, it would dispatch a `change` event.
+
+### 4.2.4
++ Fix issue #558 Switch the webpack 4
+
+### 4.2.3
++ Fix issue #556 Modify the `update()` function so that it can accept an array of options
+
+### 4.2.2
++ Fix issue #555 The `update()` function does not accept predefined option names (ie. `'euro'`)
+
+### 4.2.1
++ Fix issue #553 Missing support for very small or very big numbers displayed by Javascript as scientific numbers
+  + This adds support for using scientific notation for setting the input value (ie. `aNInput.set('6.1349392e-13');`, `<input value="7342.561e40">`)
+
 ### 4.2.0
 + Fix issue #535 Prevent entering any decimal character when only positive numbers are accepted
 + Change how the decimal character can be entered:
@@ -321,7 +462,7 @@ The highlights of this version are:
 + Update the tests with the new changes.
 + Modify how decimal places are set.
   Before you needed to add that many decimals to the `minimumValue` or `maximumValue`, and that maximum number of decimal place was used everywhere (except if you also defined `decimalPlacesOverride`, `decimalPlacesShownOnFocus` or `scaleDecimalPlaces`).
-  Now you need to explicitely define the number of decimal places using the `decimalPlaces` option.
+  Now you need to explicitly define the number of decimal places using the `decimalPlaces` option.
   If only `decimalPlaces` is defined, then the other `decimalPlaces*` options `decimalPlacesRawValue`, `decimalPlacesShownOnBlur` and `decimalPlacesShownOnFocus` are calculated from it.
   This way, you can now define clearly how many decimal places needs to be shown when focused/unfocused, and as the raw value precision.
   Note: updating the `decimalPlaces` will overwrite any `decimalPlaces*` option previously set.
